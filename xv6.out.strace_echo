@@ -1,0 +1,15 @@
+
+xv6 kernel is booting
+
+hart 2 starting
+hart 1 starting
+init: starting sh
+$ strace echo hello
+[pid 4] close(4) = 0
+[pid 4] read(3) = 1
+[pid 4] close(3) = 0
+[pid 4] exec("ü"ø&ôJğNìRèVä€") = 2
+hello[pid 4] write(1) = 5
+
+[pid 4] write(1) = 1
+$ qemu-system-riscv64: terminating on signal 15 from pid 23877 (make)

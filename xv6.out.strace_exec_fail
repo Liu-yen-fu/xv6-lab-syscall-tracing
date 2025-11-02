@@ -1,0 +1,47 @@
+
+xv6 kernel is booting
+
+hart 1 starting
+hart 2 starting
+init: starting sh
+$ strace not_a_command
+[pid 4] close(4) = 0
+[pid 4] read(3) = 1
+[pid 4] close(3) = 0
+[pid 4] exec("<bad ptr>") = -1
+s[pid 4] write(2) = 1
+t[pid 4] write(2) = 1
+r[pid 4] write(2) = 1
+a[pid 4] write(2) = 1
+c[pid 4] write(2) = 1
+e[pid 4] write(2) = 1
+:[pid 4] write(2) = 1
+ [pid 4] write(2) = 1
+e[pid 4] write(2) = 1
+x[pid 4] write(2) = 1
+e[pid 4] write(2) = 1
+c[pid 4] write(2) = 1
+ [pid 4] write(2) = 1
+n[pid 4] write(2) = 1
+o[pid 4] write(2) = 1
+t[pid 4] write(2) = 1
+_[pid 4] write(2) = 1
+a[pid 4] write(2) = 1
+_[pid 4] write(2) = 1
+c[pid 4] write(2) = 1
+o[pid 4] write(2) = 1
+m[pid 4] write(2) = 1
+m[pid 4] write(2) = 1
+a[pid 4] write(2) = 1
+n[pid 4] write(2) = 1
+d[pid 4] write(2) = 1
+ [pid 4] write(2) = 1
+f[pid 4] write(2) = 1
+a[pid 4] write(2) = 1
+i[pid 4] write(2) = 1
+l[pid 4] write(2) = 1
+e[pid 4] write(2) = 1
+d[pid 4] write(2) = 1
+
+[pid 4] write(2) = 1
+$ qemu-system-riscv64: terminating on signal 15 from pid 24039 (make)

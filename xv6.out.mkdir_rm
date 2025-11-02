@@ -1,0 +1,19 @@
+
+xv6 kernel is booting
+
+hart 2 starting
+hart 1 starting
+init: starting sh
+$ strace mkdir gKV7ZVUe
+[pid 4] close(4) = 0
+[pid 4] read(3) = 1
+[pid 4] close(3) = 0
+[pid 4] exec("ì"è") = 2
+[pid 4] mkdir("ì"è") = 0
+$ strace rm gKV7ZVUe
+[pid 6] close(4) = 0
+[pid 6] read(3) = 1
+[pid 6] close(3) = 0
+[pid 6] exec("ì"è") = 2
+[pid 6] unlink("ì"è") = 0
+$ qemu-system-riscv64: terminating on signal 15 from pid 23928 (make)

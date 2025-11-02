@@ -102,6 +102,7 @@ extern uint64 sys_unlink(void);
 extern uint64 sys_link(void);
 extern uint64 sys_mkdir(void);
 extern uint64 sys_close(void);
+extern uint64 sys_trace(void);
 
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
@@ -127,11 +128,35 @@ static uint64 (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
+[SYS_trace]   sys_trace,
 };
 
+static char *syscall_names[] = {
+[SYS_fork]    "fork",
+[SYS_exit]    "exit",
+[SYS_wait]    "wait",
+[SYS_pipe]    "pipe",
+[SYS_read]    "read",
+[SYS_kill]    "kill",
+[SYS_exec]    "exec",
+[SYS_fstat]   "fstat",
+[SYS_chdir]   "chdir",
+[SYS_dup]     "dup",
+[SYS_getpid]  "getpid",
+[SYS_sbrk]    "sbrk",
+[SYS_sleep]   "sleep",
+[SYS_uptime]  "uptime",
+[SYS_open]    "open",
+[SYS_write]   "write",
+[SYS_mknod]   "mknod",
+[SYS_unlink]  "unlink",
+[SYS_link]    "link",
+[SYS_mkdir]   "mkdir",
+[SYS_close]   "close",
+[SYS_trace]   "trace",
+};
 
-
-
+//open, chdir, mkdir, unlink, link
 
 void
 syscall(void)
@@ -141,14 +166,56 @@ syscall(void)
 
   num = p->trapframe->a7;
   if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
+    uint64 arg0 = p->trapframe->a0;
     // Use num to lookup the system call function for num, call it,
     // and store its return value in p->trapframe->a0
     p->trapframe->a0 = syscalls[num]();
+
+    if (p->traced) {
+      char buf[128];
+
+      printf("[pid %d] %s(", p->pid,
+              (num >= 0 && num < NELEM(syscall_names) && syscall_names[num]) ?
+                syscall_names[num] : "unknown");
+
+      // Print first argument according to rules:
+      switch (num) {
+        // string args: open, chdir, mkdir, unlink, link
+        case SYS_open:
+        case SYS_chdir:
+        case SYS_mkdir:
+        case SYS_unlink:
+        case SYS_link:
+          if (argstr(0, buf, sizeof(buf)) >= 0) {
+            printf("\"%s\"", buf);
+          } else {
+            printf("\"<bad ptr>\"");
+          }
+          break;
+
+        // exec: print program name from first arg (argv[0] semantics)
+        case SYS_exec:
+          if (argstr(0, buf, sizeof(buf)) >= 0) {
+            printf("\"%s\"", buf);
+          } else {
+            printf("\"<bad ptr>\"");
+          }
+          break;
+
+        // default: print integer first arg
+        default:
+          printf("%d", (int) arg0);
+          break;
+      }
+      // print return value (now stored in a0 after dispatch)
+      printf(") = %d\n", (int) p->trapframe->a0);
+    }
   } else {
     printf("%d %s: unknown sys call %d\n",
             p->pid, p->name, num);
     p->trapframe->a0 = -1;
   }
+    
 }
 
 

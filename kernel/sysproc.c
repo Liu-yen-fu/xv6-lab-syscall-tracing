@@ -92,12 +92,16 @@ sys_uptime(void)
   return xticks;
 }
 
-
+//Accept one integer argument (PID)
+//Find the process with that PID using find_proc_by_pid()
+//Set the tracing flag for matching process
+//Return 0 on success, -1 on failure (if process not found)
 uint64 
 sys_trace(void) {
     int pid;
-    if (argint(0, &pid) < 0)
-        return -1;
+    argint(0, &pid);        // fetch argument
+    if (pid < 0)            // optional: validate the value itself
+      return -1;
     struct proc *p = find_proc_by_pid(pid);
     if (!p)
         return -1;
